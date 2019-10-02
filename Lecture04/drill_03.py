@@ -46,7 +46,7 @@ while True:
        delay(0.001)
 
     r = 0
-    while r < 360 :
+    while r < 360:
         clear_canvas_now()
         grass.draw_now(400, 30)
         character.draw_now(x, y)
