@@ -15,7 +15,6 @@ while True:
         x += 5
         delay(0.01)
         get_events()
-
     elif x == 800:
         while x != 0:
             clear_canvas()
