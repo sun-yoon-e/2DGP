@@ -39,10 +39,17 @@ while running:
     character_x += move_x
     character_y += move_y
 
+    if end_x - character_x < 0:
+        character_d = 0
+    elif end_x - character_x > 0:
+        character_dir = 1
+    elif end_x - character_x == 0:
+        character_dir = 3
+
     clear_canvas()
     kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
     hand.draw(x, y)
-    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+    character.clip_draw(frame * 100, 100 * character_d, 100, 100, character_x, character_y)
     update_canvas()
     frame = (frame + 1) % 8
 
