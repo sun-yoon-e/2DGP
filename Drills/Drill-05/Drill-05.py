@@ -15,7 +15,7 @@ def handle_events():
     pass
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
-hand = load_image('hand_arrow')
+cursor = load_image('hand_arrow')
 character = load_image('animation_sheet')
 kpu_ground = load_image('KPU_GROUND')
 
