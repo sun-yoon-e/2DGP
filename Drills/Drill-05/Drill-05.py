@@ -12,6 +12,7 @@ def handle_events():
             x, y = event.x, KPU_HEIGHT -1 - event.y
         elif event.type == SDL_MOUSEBUTTONUP:
             running = False
+            x, y = event.x, KPU_HEIGHT -1 - event.y
     pass
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
@@ -25,11 +26,12 @@ frame = 0
 hide_cursor()
 
 while True:
-    hand.draw(x, y)
+    cursor.draw(x, y)
+    character.clip_draw
     while running:
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
-        hand.draw(x, y)
+        cursor.draw(x, y)
         character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
