@@ -1,4 +1,5 @@
 from pico2d import *
+
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
 def handle_events():
@@ -15,22 +16,23 @@ def handle_events():
     pass
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
-cursor = load_image('hand_arrow')
-character = load_image('animation_sheet')
-kpu_ground = load_image('KPU_GROUND')
+hand = load_image('hand_arrow.png')
+character = load_image('animation_sheet.png')
+kpu_ground = load_image('KPU_GROUND.png')
 
 running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 frame = 0
 hide_cursor()
 
+x1, x2 = 0, 0
 while True:
-    cursor.draw(x, y)
-    character.clip_draw
+    hand.draw(x, y)
+    character.clip_draw(200, 0, 100, 100, x1, x2)
     while running:
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
-        cursor.draw(x, y)
+        hand.draw(x, y)
         character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
