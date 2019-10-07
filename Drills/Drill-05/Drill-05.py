@@ -6,7 +6,8 @@ def handle_events():
     global running
     global x, y
     global end_x, end_y
-    global character_x, character_y, character_dir
+    global character_x, character_y
+    global character_dir
 
     events = get_events()
     for event in events:
@@ -24,7 +25,8 @@ kpu_ground = load_image('KPU_GROUND.png')
 
 running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
-character_x, character_y, character_d = KPU_WIDTH // 2, KPU_HEIGHT // 2, 3
+character_x, character_y = KPU_WIDTH // 2, KPU_HEIGHT // 2
+character_d = 3
 end_x = character_x
 end_y = character_y
 frame = 0
