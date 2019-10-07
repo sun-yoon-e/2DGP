@@ -15,7 +15,7 @@ def handle_events():
             x, y = event.x, KPU_HEIGHT - 1 - event.y
             character_dir = 1
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            final_x, final_y = event.x - 25, KPU_HEIGHT - 1 - event.y + 25
+            end_x, end_y = event.x - 25, KPU_HEIGHT - 1 - event.y + 25
     pass
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
