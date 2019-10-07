@@ -30,9 +30,6 @@ end_y = character_y
 frame = 0
 hide_cursor()
 
-hand.draw(x, y)
-character.clip_draw(200, 0, 100, 100, 0, 0)
-
 while running:
     move_x = (end_x - character_x) / 20
     move_y = (end_y - character_y) / 20
