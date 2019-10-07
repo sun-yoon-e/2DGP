@@ -5,18 +5,17 @@ KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 def handle_events():
     global running
     global x, y
+    global end_x, end_y
+    global character_x, character_y, character_dir
+
     events = get_events()
     for event in events:
-        if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
-            running = True
-            x, y = event.x, KPU_HEIGHT -1 - event.y
-        elif event.type == SDL_MOUSEBUTTONUP:
-            running = False
-            x, y = event.x, KPU_HEIGHT -1 - event.y
+        if event.type == SDL_MOUSEMOTION:
+            x, y = event.x, KPU_HEIGHT - 1 - event.y
+            character_dir = 1
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            final_x, final_y = event.x - 25, KPU_HEIGHT - 1 - event.y + 25
     pass
-
-def character_move():
-
 
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
 hand = load_image('hand_arrow.png')
@@ -25,6 +24,7 @@ kpu_ground = load_image('KPU_GROUND.png')
 
 running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
+character_x, character_y, character_d = KPU_WIDTH // 2, KPU_HEIGHT // 2, 3
 frame = 0
 hide_cursor()
 
