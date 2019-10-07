@@ -15,6 +15,9 @@ def handle_events():
             x, y = event.x, KPU_HEIGHT -1 - event.y
     pass
 
+def character_move():
+
+
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
 hand = load_image('hand_arrow.png')
 character = load_image('animation_sheet.png')
@@ -25,10 +28,12 @@ x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 frame = 0
 hide_cursor()
 
-x1, x2 = 0, 0
+hand.draw(x, y)
+character.clip_draw(200, 0, 100, 100, 0, 0)
+
 while True:
     hand.draw(x, y)
-    character.clip_draw(200, 0, 100, 100, x1, x2)
+
     while running:
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
