@@ -39,9 +39,9 @@ while running:
     if end_x - character_x < 0:
         character_d = 0
     elif end_x - character_x > 0:
-        character_dir = 1
+        character_d = 1
     elif end_x - character_x == 0:
-        character_dir = 3
+        character_d = 3
 
     clear_canvas()
     kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
