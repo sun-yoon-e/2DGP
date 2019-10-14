@@ -6,12 +6,11 @@ class Boy:
     def __init__(self):
         #self.x, self.y = 0, 90
         self.x, self.y = random.randint(100, 700), 90
-        self.frame = 0
+        self.frame = random.randint(0, 7)
         self.image = load_image('run_animation.png')
 
     def update(self):
-        #self.frame = (self.frame + 1) % 8
-        self.frame = random.randint(0, 7)
+        self.frame = (self.frame + 1) % 8
         self.x += 5
 
     def draw(self):
@@ -24,6 +23,34 @@ class Grass:
     def draw(self):
         self.image.draw(400, 30)
 
+class Small:
+    def __init__(self):
+        self.x, self.y = random.randint(100, 700), 599
+        self.image = load_image('ball21x21.png')
+        self.move = random.randint(5, 10)
+
+    def update(self):
+        self.y -= self.move
+        if self.y <= 65:
+            self.y = 65
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 21, 21, self.x, self.y)
+
+class Big:
+    def __init__(self):
+        self.x, self.y = random.randint(100, 700), 599
+        self.image = load_image('ball41x41.png')
+        self.move = random.randint(5, 10)
+
+    def update(self):
+        self.y -= self.move
+        if self.y <= 65:
+            self.y = 65
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 41, 41, self.x, self.y)
+
 def handle_events():
     global running
     events = get_events()
@@ -35,6 +62,11 @@ def handle_events():
 
 # initialization code
 open_canvas()
+
+small = random.randint(5, 10)
+big = 20 - small
+small_ball = [Small() for i in range(small)]
+big_ball = [Big() for i in range(big)]
 #boy = Boy()
 team = [Boy() for i in range(11)]
 grass = Grass()
@@ -47,12 +79,21 @@ while running:
     #boy.update()
     for boy in team:
         boy.update()
+    for ball in small_ball:
+        ball.update()
+    for ball in big_ball:
+        ball.update()
 
     clear_canvas()
     grass.draw()
     #boy.draw()
     for boy in team:
         boy.draw()
+    for ball in small_ball:
+        ball.draw()
+    for ball in big_ball:
+        ball.draw()
+
     update_canvas()
 
     delay(0.05)
