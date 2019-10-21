@@ -6,12 +6,14 @@ name = "TitleState"
 image = None
 
 def enter():
-    global  image
+    global image
     image = load_image('title.png')
+
 
 def exit():
     global image
     del(image)
+
 
 def handle_events():
     events = get_events()
@@ -21,8 +23,9 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
-            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 game_framework.change_state(main_state)
+
 
 def draw():
     clear_canvas()
@@ -40,9 +43,4 @@ def pause():
 
 def resume():
     pass
-
-
-
-
-
 
