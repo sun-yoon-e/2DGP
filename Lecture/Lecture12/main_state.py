@@ -20,12 +20,15 @@ def enter():
     global boy, grass
     boy = Boy()
     grass = Grass()
+    game_world.add_object(grass, 0)
+    game_world.add_object(boy, 1)
 
 
 def exit():
     global boy, grass
-    del boy
-    del grass
+    #del boy
+    #del grass
+    game_world.clear()
 
 def pause():
     pass
@@ -47,13 +50,17 @@ def handle_events():
 
 
 def update():
-    boy.update()
+    #boy.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
 
 
 def draw():
     clear_canvas()
-    grass.draw()
-    boy.draw()
+    #grass.draw()
+    #boy.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
     update_canvas()
 
 
