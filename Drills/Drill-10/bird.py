@@ -6,14 +6,14 @@ import game_world
 # Bird Run Speed
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3) # 10pixel 30cm
-RUN_SPEED_KMPH = 20.0 #km/hour
+RUN_SPEED_KMPH = 30.0 #km/hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION = 0.5
-ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+#TIME_PER_ACTION = 0.5
+#ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+#FRAMES_PER_ACTION = 5
 
 
 class Bird:
@@ -23,10 +23,15 @@ class Bird:
         self.image = load_image('bird_animation.png')
         self.dir = -1
         self.velocity = RUN_SPEED_PPS
-        self.frame = 0
+        self.frame_x = 0
+        self.frame_y = 0
 
     def update(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+        self.frame_x = (self.frame_x + 1) % 5
+        self.frame_y = (self.frame_y + 1) % 5
+        if self.frame_x == 5 and self.frame_y == 5:
+            self.frame_x = 0
+            self.frame_y = 0
         self.x += self.velocity * game_framework.frame_time
         if self.x >= 1500:
             self.velocity = -RUN_SPEED_PPS
@@ -37,6 +42,6 @@ class Bird:
 
     def draw(self):
         if self.dir == 1:
-            self.image.clip_composite_draw(int(self.frame) * 184, int(self.frame) * 169, 184, 169, 0.0, 'h', self.x, self.y, 184, 169)
+            self.image.clip_composite_draw(int(self.frame_x) * 184, int(self.frame_y) * 169, 184, 169, 0.0, 'h', self.x, self.y, 184, 169)
         elif self.dir == -1:
-            self.image.clip_draw(int(self.frame) * 184, int(self.frame) * 169, 184, 169, self.x, self.y)
+            self.image.clip_draw(int(self.frame_x) * 184, int(self.frame_y) * 169, 184, 169, self.x, self.y)
