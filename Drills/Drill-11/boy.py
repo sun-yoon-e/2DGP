@@ -149,7 +149,7 @@ class Boy:
         self.cur_state.enter(self, None)
 
         self.x1, self.x2, self.x3, self.y1, self.y2, self.y3 = 0, 0, 0, 0, 0, 0
-        self.brick = main_state.brick
+        #self.brick = main_state.brick
         self.p = 0
         self.plus_x = 0
         self.jump = False
@@ -161,22 +161,15 @@ class Boy:
         self.p = 0
 
     def get_bb(self):
-        return self.x - 25, self.y - 45, self.x + 25, self.y + 45
+        return self.x - 25, self.y - 40, self.x + 25, self.y + 45
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def update(self):
-        self.cur_state.do(self)
-        if len(self.event_que) > 0:
-            event = self.event_que.pop()
-            self.cur_state.exit(self, event)
-            self.cur_state = next_state_table[self.cur_state][event]
-            self.cur_state.enter(self, event)
-
         if self.collide:
-            self.x = self.brick.x + self.plus_x
-            self.y = self.brick.y + 50
+            self.x = main_state.brick.x + self.plus_x
+            self.y = main_state.brick.y + 60
         if not self.collide:
             self.y -= 200 * game_framework.frame_time
 
@@ -186,6 +179,13 @@ class Boy:
             if self.p >= 1:
                 self.p = 0
                 self.jump = False
+
+        self.cur_state.do(self)
+        if len(self.event_que) > 0:
+            event = self.event_que.pop()
+            self.cur_state.exit(self, event)
+            self.cur_state = next_state_table[self.cur_state][event]
+            self.cur_state.enter(self, event)
 
     def draw(self):
         self.cur_state.draw(self)

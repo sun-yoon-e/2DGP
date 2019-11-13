@@ -15,7 +15,7 @@ class Ball:
         self.plus_x = 0
         self.init = False
         self.collide = False
-        self.brick = main_state.brick
+        #self.brick = main_state.brick
 
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
@@ -28,8 +28,8 @@ class Ball:
         if not self.collide:
             self.y -= self.fall_speed * game_framework.frame_time
         if self.collide and self.init:
-            self.x = self.brick.x + self.plus_x
-            self.y = self.brick.y + 40
+            self.x = main_state.brick.x + self.plus_x
+            self.y = main_state.brick.y + 40
 
     def stop(self):
         self.fall_speed = 0

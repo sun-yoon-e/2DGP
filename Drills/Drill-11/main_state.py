@@ -11,6 +11,7 @@ from grass import Grass
 from ball import Ball, BigBall
 from brick import Brick
 
+
 name = "MainState"
 
 boy = None
@@ -76,6 +77,13 @@ def update():
         game_object.update()
 
     for ball in balls:
+        if collide(boy, ball):
+            balls.remove(ball)
+            game_world.remove_object(ball)
+
+        if collide(grass, ball):
+            ball.stop()
+
         if collide(brick, ball):
             if ball.x <= brick.x and ball.y <= brick.y + 21:
                 ball.x = brick.x - 101
@@ -87,18 +95,12 @@ def update():
                     ball.init = True
                     ball.collide = True
 
-        if collide(boy, ball):
-            balls.remove(ball)
-            game_world.remove_object(ball)
-
-        if collide(grass, ball):
-            ball.stop()
-
     if collide(grass, boy):
         boy.y = 90
 
-    if collide(brick, boy):
-        if not boy.init and boy.p > 0.5:
+    if collide(boy, brick):
+        #boy.y = 260
+        if boy.p > 0.5 and not boy.init:
             boy.init = True
             boy.collide = True
             boy.plus_x = boy.x - brick.x
