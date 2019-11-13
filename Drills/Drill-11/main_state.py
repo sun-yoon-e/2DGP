@@ -81,11 +81,32 @@ def update():
         if collide(boy, ball):
             balls.remove(ball)
             game_world.remove_object(ball)
-    for ball in balls:
+
         if collide(grass, ball):
             ball.stop()
+
         if collide(brick, ball):
-            ball.stop()
+            if ball.x <= brick.x and ball.y <= brick.y + 21:
+                ball.x = brick.x - 101
+            elif ball.x >= brick.x and ball.y <= brick.y + 21:
+                ball.x = brick.x + 101
+            else:
+                if not ball.init:
+                    ball.plus_x = ball.x - brick.x
+                    ball.init = True
+                    ball.collide = True
+
+    if collide(boy, grass):
+        boy.y = 90
+
+    if collide(boy, brick):
+        if not boy.init and boy.p > 0.5:
+            boy.init = True
+            boy.collide = True
+            boy.plus_x = boy.x - brick.x
+            boy.reset()
+    else:
+        boy.collide = False
 
 
 def draw():

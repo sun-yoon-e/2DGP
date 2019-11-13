@@ -1,8 +1,9 @@
 import game_framework
+import game_world
+import main_state
 from pico2d import *
 from ball import Ball
 
-import game_world
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -46,9 +47,11 @@ class IdleState:
 
     @staticmethod
     def exit(boy, event):
-        if event == SPACE:
-            boy.fire_ball()
-        pass
+        if event == SPACE and boy.jump == False:
+            boy.jump = True
+            boy.init = False
+            boy.collide = False
+            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 450, 90
 
     @staticmethod
     def do(boy):
@@ -81,14 +84,19 @@ class RunState:
 
     @staticmethod
     def exit(boy, event):
-        if event == SPACE:
-            boy.fire_ball()
+        if event == SPACE and not boy.jump:
+            boy.jump = True
+            boy.init = False
+            boy.collide = False
+            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 450, 90
 
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         boy.x += boy.velocity * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1600 - 25)
+        if boy.collide:
+            boy.plus_x += boy.velocity * game_framework.frame_time
 
     @staticmethod
     def draw(boy):
@@ -131,7 +139,6 @@ class Boy:
 
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
-        # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
@@ -141,12 +148,20 @@ class Boy:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
 
-    def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        self.x1, self.x2, self.x3, self.y1, self.y2, self.y3 = 0, 0, 0, 0, 0, 0
+        self.p = 0
+        self.plus_x = 0
+        self.jump = False
+        self.init = False
+        self.collide = False
+        self.brick = main_state.brick
 
-    def fire_ball(self):
-        ball = Ball(self.x, self.y, self.dir * RUN_SPEED_PPS * 10)
-        game_world.add_object(ball, 1)
+    def reset(self):
+        self.jump = False
+        self.p = 0
+
+    def get_bb(self):
+        return self.x - 25, self.y - 45, self.x + 25, self.y + 45
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -158,6 +173,19 @@ class Boy:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+
+        if self.collide:
+            self.x = self.brick.x + self.plus_x
+            self.y = self.brick.y + 50
+        if not self.collide:
+            self.y -= 200 * game_framework.frame_time
+
+        if self.jump:
+            self.y = (1 - self.p) ** 2 * self.y1 + (1 - self.p) * self.p * 2 * self.y2 + self.p ** 2 * self.y3
+            self.p += game_framework.frame_time * 1
+            if self.p >= 1:
+                self.p = 0
+                self.jump = False
 
     def draw(self):
         self.cur_state.draw(self)
