@@ -96,10 +96,10 @@ def update():
                     ball.init = True
                     ball.collide = True
 
-    if collide(boy, grass):
+    if collide(grass, boy):
         boy.y = 90
 
-    if collide(boy, brick):
+    if collide(brick, boy):
         if not boy.init and boy.p > 0.5:
             boy.init = True
             boy.collide = True

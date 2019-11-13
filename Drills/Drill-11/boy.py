@@ -47,11 +47,11 @@ class IdleState:
 
     @staticmethod
     def exit(boy, event):
-        if event == SPACE and boy.jump == False:
+        if event == SPACE and not boy.jump:
             boy.jump = True
             boy.init = False
             boy.collide = False
-            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 450, 90
+            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 500, 90
 
     @staticmethod
     def do(boy):
@@ -88,7 +88,7 @@ class RunState:
             boy.jump = True
             boy.init = False
             boy.collide = False
-            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 450, 90
+            boy.x1, boy.x2, boy.x3, boy.y1, boy.y2, boy.y3 = boy.x, boy.x, boy.x, boy.y, boy.y + 500, 90
 
     @staticmethod
     def do(boy):
@@ -149,12 +149,12 @@ class Boy:
         self.cur_state.enter(self, None)
 
         self.x1, self.x2, self.x3, self.y1, self.y2, self.y3 = 0, 0, 0, 0, 0, 0
+        self.b = main_state.brick
         self.p = 0
         self.plus_x = 0
         self.jump = False
         self.init = False
         self.collide = False
-        self.brick = main_state.brick
 
     def reset(self):
         self.jump = False
@@ -175,8 +175,8 @@ class Boy:
             self.cur_state.enter(self, event)
 
         if self.collide:
-            self.x = self.brick.x + self.plus_x
-            self.y = self.brick.y + 50
+            self.x = self.b.x + self.plus_x
+            self.y = self.b.y + 50
         if not self.collide:
             self.y -= 200 * game_framework.frame_time
 
