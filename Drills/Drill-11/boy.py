@@ -149,7 +149,7 @@ class Boy:
         self.cur_state.enter(self, None)
 
         self.x1, self.x2, self.x3, self.y1, self.y2, self.y3 = 0, 0, 0, 0, 0, 0
-        self.b = main_state.brick
+        self.brick = main_state.brick
         self.p = 0
         self.plus_x = 0
         self.jump = False
@@ -175,8 +175,8 @@ class Boy:
             self.cur_state.enter(self, event)
 
         if self.collide:
-            self.x = self.b.x + self.plus_x
-            self.y = self.b.y + 50
+            self.x = self.brick.x + self.plus_x
+            self.y = self.brick.y + 50
         if not self.collide:
             self.y -= 200 * game_framework.frame_time
 

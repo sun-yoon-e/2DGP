@@ -8,7 +8,7 @@ class Brick:
         self.image = load_image('brick180x40.png')
         self.x, self.y = 1600 // 2, 200
         self.dir = 1
-        self.speed = 200
+        self.speed = 300
 
     def update(self):
         self.x += self.dir * self.speed * game_framework.frame_time

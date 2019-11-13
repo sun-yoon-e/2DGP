@@ -23,31 +23,29 @@ big_balls = []
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
-    if left_a > right_b: return False
-    if right_a < left_b: return False
-    if top_a < bottom_b: return False
-    if bottom_a > top_b: return False
+    if left_a > right_b:
+        return False
+    if right_a < left_b:
+        return False
+    if top_a < bottom_b:
+        return False
+    if bottom_a > top_b:
+        return False
     return True
 
 
 def enter():
-    global boy
+    global boy, balls, brick, grass
     boy = Boy()
-    game_world.add_object(boy, 1)
-
-    global grass
+    brick = Brick()
     grass = Grass()
+
+    game_world.add_object(brick, 1)
+    game_world.add_object(boy, 1)
     game_world.add_object(grass, 0)
 
-    # fill here for balls
-    global balls
-    #balls = [Ball() for i in range(10)]
     balls = [Ball() for i in range(10)] + [BigBall() for i in range(10)]
     game_world.add_objects(balls, 1)
-
-    global brick
-    brick = Brick()
-    game_world.add_object(brick, 1)
 
 
 def exit():
@@ -78,13 +76,6 @@ def update():
         game_object.update()
 
     for ball in balls:
-        if collide(boy, ball):
-            balls.remove(ball)
-            game_world.remove_object(ball)
-
-        if collide(grass, ball):
-            ball.stop()
-
         if collide(brick, ball):
             if ball.x <= brick.x and ball.y <= brick.y + 21:
                 ball.x = brick.x - 101
@@ -95,6 +86,13 @@ def update():
                     ball.plus_x = ball.x - brick.x
                     ball.init = True
                     ball.collide = True
+
+        if collide(boy, ball):
+            balls.remove(ball)
+            game_world.remove_object(ball)
+
+        if collide(grass, ball):
+            ball.stop()
 
     if collide(grass, boy):
         boy.y = 90
