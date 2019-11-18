@@ -16,7 +16,6 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 
-
 # Boy Event
 RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
@@ -34,7 +33,6 @@ key_event_table = {
 
 
 # Boy States
-
 class WalkingState:
 
     @staticmethod
@@ -56,8 +54,6 @@ class WalkingState:
             boy.y_velocity -= RUN_SPEED_PPS
         elif event == DOWNKEY_UP:
             boy.y_velocity += RUN_SPEED_PPS
-
-
 
     @staticmethod
     def exit(boy, event):
@@ -119,7 +115,6 @@ class Boy:
         # fill here
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
-
     def add_event(self, event):
         self.event_que.insert(0, event)
 
@@ -142,4 +137,3 @@ class Boy:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-

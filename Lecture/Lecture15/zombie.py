@@ -31,7 +31,16 @@ class Zombie:
                 Zombie.images[name] = [load_image("./zombiefiles/female/"+ name + " (%d)" % i + ".png") for i in range(1, 11)]
 
     def __init__(self):
-        self.x, self.y = 1280 / 4 * 3, 1024 / 4 * 3
+        # positions for origin at top, left
+        positions = [(43, 750),(1118, 750),(1050, 530),(575, 220),(235, 33), (575,220),(1050, 530), (1118,750)]
+        self.patrol_positions = []
+        for p in positions:
+            self.patrol_positions.append((p[0], 1024-p[1])) # convert for origin at bottom, left
+        self.patrol_order = 1
+        self.target_x, self.target_y = None, None
+        self.x, self.y = self.patrol_positions[0]
+        #self.x, self.y = 1280 / 4 * 3, 1024 / 4 * 3
+
         self.load_images()
         self.dir = random.random()*2*math.pi # random moving direction
         self.speed = 0
@@ -48,38 +57,84 @@ class Zombie:
 
     def wander(self):
         # fill here
-        pass
+        self.speed = RUN_SPEED_PPS
+        self.calculate_current_position()
+        self.timer -= game_framework.frame_time
+        if self.timer < 0:
+            self.timer += 1.0
+            self.dir = random.random()*2*math.pi
+
+        return BehaviorTree.SUCCESS
 
     def find_player(self):
         # fill here
-        pass
+        boy = main_state.get_boy()
+        distance = (boy.x - self.x)**2 + (boy.y - self.y)**2
+        if distance < (PIXEL_PER_METER *10)**2:
+            self.dir = math.atan2(boy.y - self.y, boy.x - self.x)
+            return BehaviorTree.SUCCESS
+        else:
+            self.speed = 0
+            return  BehaviorTree.FAIL
 
     def move_to_player(self):
         # fill here
-        pass
+        self.speed = RUN_SPEED_PPS
+        self.calculate_current_position()
+        return BehaviorTree.SUCCESS
 
     def get_next_position(self):
         # fill here
-        pass
+        self.target_x, self.target_y = self.patrol_positions[self.patrol_order % len(self.patrol_positions)]
+        self.patrol_order += 1
+        self.dir = math.atan2(self.target_y - self.y, self.target_x - self.x)
+        return BehaviorTree.SUCCESS
 
     def move_to_target(self):
         # fill here
-        pass
+        self.speed = RUN_SPEED_PPS
+        self.calculate_current_position()
+
+        distance = (self.target_x - self.x)**2 + (self.target_y - self.y)**2
+
+        if distance < PIXEL_PER_METER**2:
+            return  BehaviorTree.SUCCESS
+        else:
+            return  BehaviorTree.RUNNING
 
     def build_behavior_tree(self):
         # fill here
-        pass
+        #wander_node = LeafNode("Wander", self.wander)
+        #self.bt = BehaviorTree(wander_node)
 
+        #get_next_position_node = LeafNode("Get Next Position", self.get_next_position)
+        #move_to_target_node = LeafNode("Move to Target", self.move_to_target)
+        #patrol_node = SequenceNode("Patrol")
+        #patrol_node.add_children(get_next_position_node, move_to_target_node)
+        #self.bt = BehaviorTree(patrol_node)
 
+        #find_player_node = LeafNode("Find Player", self.find_player)
+        #move_to_player_node = LeafNode("Move to Player", self.move_to_player)
+        #chase_node = SequenceNode("Chase")
+        #chase_node.add_children(find_player_node, move_to_player_node)
+        #self.bt = BehaviorTree(chase_node)
 
+        wander_node = LeafNode("Wander", self.wander)
+        find_player_node = LeafNode("Find Player", self.find_player)
+        move_to_player_node = LeafNode("Move to Player", self.move_to_player)
+        chase_node = SequenceNode("Chase")
+        chase_node.add_children(find_player_node, move_to_player_node)
+        wander_chase_node = SelectorNode("WanderChase")
+        wander_chase_node.add_children(chase_node, wander_node)
+        self.bt = BehaviorTree(wander_chase_node)
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def update(self):
         # fill here
+        self.bt.run()
         pass
-
 
     def draw(self):
         if math.cos(self.dir) < 0:
@@ -95,4 +150,3 @@ class Zombie:
 
     def handle_event(self, event):
         pass
-
