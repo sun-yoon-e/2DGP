@@ -5,7 +5,6 @@ import os
 from pico2d import *
 import game_framework
 import game_world
-import game_over
 
 from boy import Boy
 from ball import Ball
@@ -33,6 +32,10 @@ def collide(a, b):
 
 def get_boy():
     return boy
+
+
+def get_balls():
+    return balls
 
 
 def enter():
@@ -94,7 +97,7 @@ def update():
         if boy.hp >= zombie.hp:
             game_world.remove_object(zombie)
         else:
-            game_framework.change_state(game_over)
+            game_framework.quit()
 
 
 def draw():
