@@ -66,6 +66,19 @@ class Zombie:
 
         return BehaviorTree.SUCCESS
 
+    def find_ball(self):
+        for ball in main_state.balls:
+            distance = (ball.x - self.x)**2 + (ball.y - self.y)**2
+            if distance < (PIXEL_PER_METER * 10)**2:
+                self.dir = math.atan2(ball.y - self.y, ball.x - self.x)
+                return BehaviorTree.SUCCESS
+            else:
+                self.speed = 0
+                return BehaviorTree.FAIL
+
+    def eat_ball(self):
+        pass
+
     def find_player(self):
         boy = main_state.get_boy()
         distance = (boy.x - self.x)**2 + (boy.y - self.y)**2
@@ -81,6 +94,9 @@ class Zombie:
         self.calculate_current_position()
         return BehaviorTree.SUCCESS
 
+    def run_away(self):
+        pass
+
     def get_next_position(self):
         self.target_x, self.target_y = self.patrol_positions[self.patrol_order % len(self.patrol_positions)]
         self.patrol_order += 1
@@ -94,16 +110,22 @@ class Zombie:
         distance = (self.target_x - self.x)**2 + (self.target_y - self.y)**2
 
         if distance < PIXEL_PER_METER**2:
-            return  BehaviorTree.SUCCESS
+            return BehaviorTree.SUCCESS
         else:
-            return  BehaviorTree.RUNNING
+            return BehaviorTree.RUNNING
 
     def build_behavior_tree(self):
-        wander_node = LeafNode("Wander", self.wander)
+        find_ball_node = LeafNode("Find Ball", self.find_ball)
+        eat_ball_node = LeafNode("Eat Ball", self.eat_ball)
+        wander_node = SequenceNode("Wander")
+        wander_node.add_children(find_ball_node, eat_ball_node)
+
         find_player_node = LeafNode("Find Player", self.find_player)
+        run_away_node = LeafNode("Run Away", self.run_away)
         move_to_player_node = LeafNode("Move to Player", self.move_to_player)
         chase_node = SequenceNode("Chase")
-        chase_node.add_children(find_player_node, move_to_player_node)
+        chase_node.add_children(find_player_node, move_to_player_node, run_away_node)
+
         wander_chase_node = SelectorNode("WanderChase")
         wander_chase_node.add_children(chase_node, wander_node)
         self.bt = BehaviorTree(wander_chase_node)
