@@ -39,7 +39,8 @@ class Zombie:
         self.patrol_order = 1
         self.target_x, self.target_y = None, None
         self.x, self.y = self.patrol_positions[0]
-        #self.x, self.y = 1280 / 4 * 3, 1024 / 4 * 3
+        self.font = load_font('ENCR10B.TTF', 16)
+        self.hp = 0
 
         self.load_images()
         self.dir = random.random()*2*math.pi # random moving direction
@@ -56,7 +57,6 @@ class Zombie:
         self.y = clamp(50, self.y, 1024 - 50)
 
     def wander(self):
-        # fill here
         self.speed = RUN_SPEED_PPS
         self.calculate_current_position()
         self.timer -= game_framework.frame_time
@@ -67,7 +67,6 @@ class Zombie:
         return BehaviorTree.SUCCESS
 
     def find_player(self):
-        # fill here
         boy = main_state.get_boy()
         distance = (boy.x - self.x)**2 + (boy.y - self.y)**2
         if distance < (PIXEL_PER_METER *10)**2:
@@ -78,20 +77,17 @@ class Zombie:
             return  BehaviorTree.FAIL
 
     def move_to_player(self):
-        # fill here
         self.speed = RUN_SPEED_PPS
         self.calculate_current_position()
         return BehaviorTree.SUCCESS
 
     def get_next_position(self):
-        # fill here
         self.target_x, self.target_y = self.patrol_positions[self.patrol_order % len(self.patrol_positions)]
         self.patrol_order += 1
         self.dir = math.atan2(self.target_y - self.y, self.target_x - self.x)
         return BehaviorTree.SUCCESS
 
     def move_to_target(self):
-        # fill here
         self.speed = RUN_SPEED_PPS
         self.calculate_current_position()
 
@@ -103,22 +99,6 @@ class Zombie:
             return  BehaviorTree.RUNNING
 
     def build_behavior_tree(self):
-        # fill here
-        #wander_node = LeafNode("Wander", self.wander)
-        #self.bt = BehaviorTree(wander_node)
-
-        #get_next_position_node = LeafNode("Get Next Position", self.get_next_position)
-        #move_to_target_node = LeafNode("Move to Target", self.move_to_target)
-        #patrol_node = SequenceNode("Patrol")
-        #patrol_node.add_children(get_next_position_node, move_to_target_node)
-        #self.bt = BehaviorTree(patrol_node)
-
-        #find_player_node = LeafNode("Find Player", self.find_player)
-        #move_to_player_node = LeafNode("Move to Player", self.move_to_player)
-        #chase_node = SequenceNode("Chase")
-        #chase_node.add_children(find_player_node, move_to_player_node)
-        #self.bt = BehaviorTree(chase_node)
-
         wander_node = LeafNode("Wander", self.wander)
         find_player_node = LeafNode("Find Player", self.find_player)
         move_to_player_node = LeafNode("Move to Player", self.move_to_player)
@@ -132,11 +112,12 @@ class Zombie:
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def update(self):
-        # fill here
         self.bt.run()
-        pass
 
     def draw(self):
+        self.font.draw(self.x - 60, self.y + 50, 'hp: %d' % self.hp, (255, 255, 0))
+        draw_rectangle(*self.get_bb())
+
         if math.cos(self.dir) < 0:
             if self.speed == 0:
                 Zombie.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)

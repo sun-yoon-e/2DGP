@@ -5,8 +5,10 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import game_over
 
 from boy import Boy
+from ball import Ball
 from ground import Ground
 from zombie import Zombie
 
@@ -14,10 +16,10 @@ name = "MainState"
 
 boy = None
 zombie = None
+balls = []
 
 
 def collide(a, b):
-    # fill here
     left_a, bottom_a, right_a, top_a = a.get_bb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
@@ -34,6 +36,10 @@ def get_boy():
 
 
 def enter():
+    global balls
+    balls = [Ball() for i in range(30)]
+    game_world.add_objects(balls, 1)
+
     global boy
     boy = Boy()
     game_world.add_object(boy, 1)
@@ -72,6 +78,23 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+
+    for ball in balls:
+        if collide(boy, ball):
+            boy.hp += 100
+            balls.remove(ball)
+            game_world.remove_object(ball)
+
+        if collide(zombie, ball):
+            zombie.hp += 100
+            balls.remove(ball)
+            game_world.remove_object(ball)
+
+        if collide(boy, zombie):
+            if boy.hp >= zombie.hp:
+                game_world.remove_object(zombie)
+            else:
+                game_framework.change_state(game_over)
 
 
 def draw():
