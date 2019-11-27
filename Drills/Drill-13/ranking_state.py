@@ -3,13 +3,13 @@ import pickle
 import os
 
 from pico2d import *
-import game_world
 import game_framework
+import game_world
+
 import world_build_state
 
 font = None
-time = None
-
+recode = None
 ranking = []
 
 
@@ -21,8 +21,8 @@ def enter():
     with open('ranking.txt', 'r') as f:
         ranking = json.load(f)
 
-    ranking.append(time)
-    ranking.sort()
+    ranking.append(recode)
+    #ranking.sort()
     ranking.reverse()
 
     while ranking.__len__() > 10:
@@ -34,7 +34,6 @@ def enter():
 
 def exit():
     game_world.clear()
-
 
 def pause():
     pass
@@ -54,20 +53,19 @@ def handle_events():
 
 
 def update():
-    for game_object in game_framework.all_objects():
+    for game_object in game_world.all_objects():
         game_object.update()
 
 
 def draw():
     clear_canvas()
-
     for game_object in game_world.all_objects():
         game_object.draw()
 
-    font.draw(int(40 * 100 / 3) // 2 - 80,  int(30 * 100 / 3) // 2 + 250, "[Total Ranking]")
+    font.draw(int(40 * 100 / 3) // 2 - 80, int(30 * 100 / 3) // 2 + 250, "[Score : %.2f]" % recode)
+    font.draw(int(40 * 100 / 3) // 2 - 80, int(30 * 100 / 3) // 2 + 200, "[Total Ranking]")
 
-    for i in range(0, ranking.__len()):
-        font.draw(int(40 * 100 / 3) // 2 - 80,  int(30 * 100 / 3) // 2 + 80 * i,
-                  "#" + str(i + 1) + "." + '%.2f' % ranking[i])
-
+    for i in range(0, ranking.__len__()):
+        font.draw(get_canvas_width() // 2 - 80, get_canvas_height() // 2 + 100 - 20 * i,
+                  "#" + str(i+1) + ". " + '%.2f' % ranking[i])
     update_canvas()
