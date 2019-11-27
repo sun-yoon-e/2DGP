@@ -5,13 +5,23 @@ import pickle
 objects = [[],[]]
 
 
+def save():
+    with open('game.sav', 'wb') as f:
+        pickle.dump(objects, f)
+
+
+def load():
+    global objects
+    with open('game.sav', 'rb') as f:
+        objects = pickle.load(f)
+
+
 def add_object(o, layer):
     objects[layer].append(o)
 
 
 def add_objects(l, layer):
     objects[layer] += l
-
 
 
 def remove_object(o):
