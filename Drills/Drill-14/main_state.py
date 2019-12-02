@@ -7,7 +7,7 @@ import game_framework
 import game_world
 
 from boy import Boy
-# fill here
+from ball import Ball
 from background import FixedBackground as Background
 
 
@@ -15,10 +15,10 @@ name = "MainState"
 
 boy = None
 background = None
+balls = []
 
 
 def collide(a, b):
-    # fill here
     left_a, bottom_a, right_a, top_a = a.get_bb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
@@ -30,7 +30,6 @@ def collide(a, b):
     return True
 
 
-
 def get_boy():
     return boy
 
@@ -40,17 +39,24 @@ def enter():
     boy = Boy()
     game_world.add_object(boy, 1)
 
+    global balls
+    balls = [Ball() for i in range(100)]
+    game_world.add_objects(balls, 1)
+
+    for ball in balls:
+        ball.set_center_object(boy)
+
     global background
     background = Background()
     game_world.add_object(background, 0)
 
-    # fill here
     background.set_center_object(boy)
     boy.set_background(background)
 
 
 def exit():
     game_world.clear()
+
 
 def pause():
     pass
@@ -74,6 +80,12 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+
+    for ball in balls:
+        if collide(boy, ball):
+            balls.remove(ball)
+            game_world.remove_object(ball)
+            boy.ball += 1
 
 
 def draw():

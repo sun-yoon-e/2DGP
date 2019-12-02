@@ -16,7 +16,6 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 
-
 # Boy Event
 RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
@@ -34,7 +33,6 @@ key_event_table = {
 
 
 # Boy States
-
 class WalkingState:
 
     @staticmethod
@@ -70,17 +68,12 @@ class WalkingState:
         boy.x += boy.x_velocity * game_framework.frame_time
         boy.y += boy.y_velocity * game_framework.frame_time
 
-        # fill here
-        #boy.x = clamp(boy.canvas_width // 2, boy.x, boy.bg.w - boy.canvas_width // 2)
-        #boy.y = clamp(boy.canvas_height // 2, boy.y, boy.bg.h - boy.canvas_height // 2)
         boy.x = clamp(0, boy.x, boy.bg.w)
         boy.y = clamp(0, boy.y, boy.bg.h)
 
 
     @staticmethod
     def draw(boy):
-        # fill here
-        #cx, cy = boy.canvas_width // 2, boy.canvas_height // 2
         cx, cy = boy.x - boy.bg.window_left, boy.y - boy.bg.window_bottom
 
         if boy.x_velocity > 0:
@@ -112,7 +105,6 @@ next_state_table = {
 
 
 class Boy:
-
     def __init__(self):
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
@@ -125,15 +117,20 @@ class Boy:
         self.event_que = []
         self.cur_state = WalkingState
         self.cur_state.enter(self, None)
+        self.ball = 0
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
-
 
     def set_background(self, bg):
         self.bg = bg
         self.x = self.bg.w / 2
         self.y = self.bg.h / 2
+
+    def set_balls(self, bl):
+        self.bl = bl
+        self.x = self.bl.w / 2
+        self.y = self.bl.h / 2
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -149,6 +146,8 @@ class Boy:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.canvas_width//2 - 60, self.canvas_height//2 + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
+        self.font.draw(self.canvas_width//2, self.canvas_height//2 + 70, '%d' % self.ball, (255, 0, 255))
+
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
