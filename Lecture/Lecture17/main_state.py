@@ -11,8 +11,6 @@ from boy import Boy
 #from background import FixedBackground as Background
 from background import InfiniteBackground as Background
 
-
-
 name = "MainState"
 
 boy = None
