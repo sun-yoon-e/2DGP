@@ -5,7 +5,7 @@ import game_world
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_KMPH = 30.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -148,9 +148,7 @@ class Boy:
         self.font.draw(self.canvas_width//2 - 60, self.canvas_height//2 + 50, '(%5d, %5d)' % (self.x, self.y), (255, 255, 0))
         self.font.draw(self.canvas_width//2, self.canvas_height//2 + 70, '%d' % self.ball, (255, 0, 255))
 
-
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
