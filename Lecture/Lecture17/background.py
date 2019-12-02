@@ -1,5 +1,4 @@
 import random
-
 from pico2d import *
 
 
@@ -16,12 +15,10 @@ class FixedBackground:
         # fill here
         self.center_object = boy
 
-
     def draw(self):
         # fill here
         self.image.clip_draw_to_origin( self.window_left, self.window_bottom,
                                         self.canvas_width, self.canvas_height, 0, 0)
-
 
     def update(self):
         # fill here
@@ -35,8 +32,6 @@ class FixedBackground:
 
 
 class InfiniteBackground:
-
-
     def __init__(self):
         self.image = load_image('futsal_court.png')
         self.canvas_width = get_canvas_width()
@@ -46,7 +41,6 @@ class InfiniteBackground:
 
     def set_center_object(self, boy):
         self.center_object = boy
-
 
     def draw(self):
         self.image.clip_draw_to_origin(self.q3l, self.q3b, self.q3w, self.q3h, 0, 0)                # quadrant 3
@@ -78,12 +72,5 @@ class InfiniteBackground:
         self.q1w = self.q4w
         self.q1h = self.q2h
 
-
-
     def handle_event(self, event):
         pass
-
-
-
-
-
