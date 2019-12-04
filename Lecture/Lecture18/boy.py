@@ -147,6 +147,8 @@ class Boy:
         self.cur_state.enter(self, None)
 
         # fill here
+        self.eat_sount = load_wav('pickup.wav')
+        self.eat_sount.set_volume(32)
 
 
     def get_bb(self):
@@ -156,7 +158,7 @@ class Boy:
 
     def eat(self, ball):
         # fill here
-        pass
+        self.eat_sount.play()
 
 
     def add_event(self, event):
